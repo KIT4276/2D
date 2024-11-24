@@ -15,7 +15,6 @@ public class PlayerAnimator : MonoBehaviour
     {
         _animator.SetFloat(X_Hash, moveVector.normalized.x);
         _animator.SetFloat(Y_Hash, moveVector.normalized.y);
-        //Debug.Log(moveVector);
 
         if (moveVector != Vector2.zero)
         {

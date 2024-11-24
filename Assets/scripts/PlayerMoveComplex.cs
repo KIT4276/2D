@@ -6,6 +6,8 @@ public class PlayerMoveComplex : MonoBehaviour
 {
     [SerializeField] private float _walkSpeed = 1;
     [SerializeField] private float _runningSpeed = 2;
+    [Space]
+    [SerializeField] float _doubleClickTime = 0.2f;
 
     private NavMeshAgent _navMeshAgent;
     private PlayerAnimator _animator;
@@ -19,7 +21,7 @@ public class PlayerMoveComplex : MonoBehaviour
     private Vector3 _moucePosition;
     private Vector3 _worldPosition;
     private Vector3 _targetPosition;
-
+    private float _lastClickTime;
 
     private void Start()
     {
@@ -33,28 +35,26 @@ public class PlayerMoveComplex : MonoBehaviour
 
         TryToFindClickPosition();
 
-        if (_controlType == ControlType.AI)
-            Debug.Log(_controlType);
+        SpeedSelection();
 
-        switch (_controlType)
+        if (_controlType == ControlType.WASD)
         {
-            case ControlType.WASD:
-                UpdateWASD();
-                break;
-            case ControlType.AI:
-                UpdateAI();
-                break;
-            default:
-                UpdateWASD();
-                break;
+            UpdateWASD();
+            _animator.ToMove(_moveVector, _isRunning);
         }
 
-        UpdateAnimator();
+        if (_controlType == ControlType.AI)
+        {
+            UpdateAI();
+            _animator.ToMove(_navMeshAgent.velocity.normalized, _isRunning);
+        }
+
+        Debug.Log(_isRunning);
     }
 
     private void TryToFindMoveVector()
     {
-        _moveVector = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        _moveVector = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
         if (_moveVector != Vector2.zero)
         {
@@ -64,7 +64,7 @@ public class PlayerMoveComplex : MonoBehaviour
 
     private void TryToFindClickPosition()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             _controlType = ControlType.AI;
 
@@ -77,7 +77,7 @@ public class PlayerMoveComplex : MonoBehaviour
                 _targetPosition = new Vector3(_worldPosition.x, _worldPosition.y, 0);
             }
         }
-        else if(!_navMeshAgent.hasPath)
+        else if (!_navMeshAgent.hasPath)
             _controlType = ControlType.WASD;
     }
 
@@ -85,30 +85,56 @@ public class PlayerMoveComplex : MonoBehaviour
     {
         _navMeshAgent.enabled = false;
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
+        if (_isRunning)
             _moveSpeed = _runningSpeed;
-            _isRunning = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
+        else
             _moveSpeed = _walkSpeed;
-            _isRunning = false;
-        }
 
-        transform.position += (Vector3)(_moveSpeed * Time.fixedDeltaTime * _moveVector.normalized);
+        transform.position += (Vector3)(_moveSpeed * Time.deltaTime * _moveVector);
     }
 
     private void UpdateAI()
     {
         _navMeshAgent.enabled = true;
+
+        if (_isRunning)
+            _navMeshAgent.speed = _runningSpeed;
+        else
+            _navMeshAgent.speed = _walkSpeed;
+
         _navMeshAgent.SetDestination(_targetPosition);
     }
 
-    private void UpdateAnimator()
+    private void SpeedSelection()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            float timeSinceLastClick = Time.time - _lastClickTime;
 
+            if (timeSinceLastClick <= _doubleClickTime)
+            {
+                _isRunning = true;
+            }
+            else
+            {
+                _isRunning = false;
+            }
+
+            _lastClickTime = Time.time;
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            _isRunning = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _isRunning = false;
+        }
+
+        if (_controlType == ControlType.WASD && _moveVector == Vector2.zero)
+                _isRunning = false;
     }
 
 
