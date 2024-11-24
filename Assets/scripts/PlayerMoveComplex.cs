@@ -14,7 +14,7 @@ public class PlayerMoveComplex : MonoBehaviour
     private Camera _camera;
     private ControlType _controlType;
 
-    [SerializeField] private float _moveSpeed;
+    private float _moveSpeed;
     private bool _isRunning;
     private Vector2 _moveVector;
 
@@ -48,8 +48,6 @@ public class PlayerMoveComplex : MonoBehaviour
             UpdateAI();
             _animator.ToMove(_navMeshAgent.velocity.normalized, _isRunning);
         }
-
-        Debug.Log(_isRunning);
     }
 
     private void TryToFindMoveVector()

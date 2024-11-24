@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
+[RequireComponent (typeof(Animator))]
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
 
-    private const string MoveHash = "IsMove";
     private const string RunHash = "Run";
     private const string X_Hash = "X";
     private const string Y_Hash = "Y";
@@ -18,8 +18,6 @@ public class PlayerAnimator : MonoBehaviour
 
         if (moveVector != Vector2.zero)
         {
-            _animator.SetBool(MoveHash, true);
-
             if (isRun)
                 _animator.SetBool(RunHash, true);
             else
@@ -32,7 +30,6 @@ public class PlayerAnimator : MonoBehaviour
         }
         else
         {
-            _animator.SetBool(MoveHash, false);
             _animator.SetBool(RunHash, false);
         }
 
