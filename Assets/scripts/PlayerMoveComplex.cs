@@ -123,10 +123,12 @@ public class PlayerMoveComplex : MonoBehaviour
             _lastClickTime = Time.time;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             _isRunning = true;
         }
+        else if(_controlType == ControlType.WASD)
+            _isRunning = false;
 
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
