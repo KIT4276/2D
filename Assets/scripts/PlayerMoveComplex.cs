@@ -65,11 +65,11 @@ public class PlayerMoveComplex : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             _controlType = ControlType.AI;
-
             _moucePosition = Input.mousePosition;
+
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(_moucePosition), Vector2.zero);
 
-            if (hit.collider.CompareTag("Ground"))
+            if (hit.collider!= null && hit.collider.CompareTag("Ground"))
             {
                 _worldPosition = _camera.ScreenToWorldPoint(_moucePosition);
                 _targetPosition = new Vector3(_worldPosition.x, _worldPosition.y, 0);
