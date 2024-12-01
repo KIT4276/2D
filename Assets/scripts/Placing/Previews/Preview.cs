@@ -35,7 +35,7 @@ public class Preview : MonoBehaviour
         _idMoving = false;
     }
 
-    public void SetCurrentMoucePosition(Vector2 position, Vector2Int GridPose, Func<Boolean> isBuildAvailable)
+    public void SetCurrentMousePosition(Vector2 position, Vector2Int GridPose, Func<Boolean> isBuildAvailable)
     {
         if (_idMoving) 
         { 
