@@ -6200,7 +6200,7 @@ MonoBehaviour:
         m_MethodName: ShowPlacablePreview
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 2432169104570219253, guid: 44308b10536c05341a27f7b6d0def439, type: 3}
+          m_ObjectArgument: {fileID: 3693648741633539257, guid: 4ef7a9298ea7e6044bd705082971f4da, type: 3}
           m_ObjectArgumentAssemblyTypeName: Preview, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
