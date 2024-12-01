@@ -9,6 +9,10 @@ public class PlayerMoveComplex : MonoBehaviour
     [Space]
     [SerializeField] float _doubleClickTime = 0.2f;
 
+    private const string Horizontal = "Horizontal";
+    private const string Vertical = "Vertical";
+    private const string GroundTag = "Ground";
+
     private NavMeshAgent _navMeshAgent;
     private PlayerAnimator _animator;
     private Camera _camera;
@@ -52,7 +56,7 @@ public class PlayerMoveComplex : MonoBehaviour
 
     private void TryToFindMoveVector()
     {
-        _moveVector = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        _moveVector = new Vector2(Input.GetAxisRaw(Horizontal), Input.GetAxisRaw(Vertical)).normalized;
 
         if (_moveVector != Vector2.zero)
         {
@@ -69,7 +73,7 @@ public class PlayerMoveComplex : MonoBehaviour
 
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(_moucePosition), Vector2.zero);
 
-            if (hit.collider!= null && hit.collider.CompareTag("Ground"))
+            if (hit.collider!= null && hit.collider.CompareTag(GroundTag))
             {
                 _worldPosition = _camera.ScreenToWorldPoint(_moucePosition);
                 _targetPosition = new Vector3(_worldPosition.x, _worldPosition.y, 0);
