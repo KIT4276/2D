@@ -7,7 +7,8 @@ public class PlayerMoveComplex : MonoBehaviour
     [SerializeField] private float _walkSpeed = 1;
     [SerializeField] private float _runningSpeed = 2;
     [Space]
-    [SerializeField] float _doubleClickTime = 0.2f;
+    [SerializeField] private float _doubleClickTime = 0.2f;
+    [SerializeField] private CharacterController _characterController;
 
     private const string Horizontal = "Horizontal";
     private const string Vertical = "Vertical";
@@ -73,7 +74,7 @@ public class PlayerMoveComplex : MonoBehaviour
 
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(_moucePosition), Vector2.zero);
 
-            if (hit.collider!= null && hit.collider.CompareTag(GroundTag))
+            if (hit.collider != null && hit.collider.CompareTag(GroundTag))
             {
                 _worldPosition = _camera.ScreenToWorldPoint(_moucePosition);
                 _targetPosition = new Vector3(_worldPosition.x, _worldPosition.y, 0);
@@ -92,7 +93,7 @@ public class PlayerMoveComplex : MonoBehaviour
         else
             _moveSpeed = _walkSpeed;
 
-        transform.position += (Vector3)(_moveSpeed * Time.deltaTime * _moveVector);
+        _characterController.Move((Vector3)(_moveSpeed * Time.deltaTime * _moveVector));
     }
 
     private void UpdateAI()
@@ -105,6 +106,7 @@ public class PlayerMoveComplex : MonoBehaviour
             _navMeshAgent.speed = _walkSpeed;
 
         _navMeshAgent.SetDestination(_targetPosition);
+        
     }
 
     private void SpeedSelection()
@@ -129,7 +131,7 @@ public class PlayerMoveComplex : MonoBehaviour
         {
             _isRunning = true;
         }
-        else if(_controlType == ControlType.WASD)
+        else if (_controlType == ControlType.WASD)
             _isRunning = false;
 
         if (Input.GetKeyUp(KeyCode.LeftShift))
@@ -138,7 +140,7 @@ public class PlayerMoveComplex : MonoBehaviour
         }
 
         if (_controlType == ControlType.WASD && _moveVector == Vector2.zero)
-                _isRunning = false;
+            _isRunning = false;
     }
 
 
